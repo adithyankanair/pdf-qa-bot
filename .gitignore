@@ -1,1 +1,2 @@
-# was for testing purpose
+__pycache__/
+.env

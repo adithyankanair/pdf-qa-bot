@@ -28,7 +28,6 @@ if uploaded_file:
 
         vector_store = create_faiss_vector_store(chunks)
 
-    # question = st.text_input("Ask a question about this pdf: ")
     #adding chat history
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
