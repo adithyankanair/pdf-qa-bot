@@ -1,13 +1,9 @@
+import os
+import requests
 from PyPDF2 import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-
-#create embeddings for each chunk using OpenAIEmbeddings, store them in a FAISS vector store, return the retriever
 from langchain_community.vectorstores import FAISS
-# from langchain_embeddings import OpenRouterEmbeddings
 
-#for groq
-import requests
-import os
 
 def ask_question_groq(context,question):
     api_key = os.getenv("GROQ_API_KEY")
