@@ -3,7 +3,7 @@ import requests
 from PyPDF2 import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain_huggingface import HuggingFaceBgeEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 
 def load_pdf_text(file_path):
     reader = PdfReader(file_path)
@@ -20,7 +20,7 @@ def split_text(text):
     return splitter.split_text(text)
 
 def create_faiss_vector_store(chunks):
-    embeddings = HuggingFaceBgeEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     vector_store = FAISS.from_texts(chunks, embedding=embeddings)
     return vector_store
 

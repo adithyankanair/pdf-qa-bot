@@ -28,15 +28,26 @@ if uploaded_file:
 
         vector_store = create_faiss_vector_store(chunks)
 
-    question = st.text_input("Ask a question about this pdf: ")
+    # question = st.text_input("Ask a question about this pdf: ")
+    #adding chat history
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
+    
+    user_question = st.text_input("Ask a question about this PDF: ",key="input")
 
-    if question:
+
+
+    if user_question:
         with st.spinner("Retrieving relevant context...."):
-            context = retrieve_relevant_chunks(vector_store, question)
+            context = retrieve_relevant_chunks(vector_store, user_question)
 
         with st.spinner("Asking Groq..."):
-            answer = ask_question_groq(context, question)
-            st.success("Here's the answer: ")
-            st.write(answer)
+            answer = ask_question_groq(context, user_question)
+        
+        st.session_state.chat_history.append((user_question, answer))
+        st.markdown("chat history")
+        for q, a in reversed(st.session_state.chat_history):
+            st.markdown(f"You: {q}")
+            st.markdown(f"Bot:{a}")
 
             
