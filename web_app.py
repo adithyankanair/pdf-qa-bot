@@ -1,12 +1,18 @@
 import streamlit as st
-from utils import load_pdf_text, split_text, ask_question_groq
+from utils import (
+    load_pdf_text, 
+    split_text,
+    create_faiss_vector_store,
+    retrieve_relevant_chunks, 
+    ask_question_groq
+)
 from dotenv import load_dotenv
 import tempfile
 
 load_dotenv()
 
 st.set_page_config(page_title="PDF Q&A Bot", layout="centered")
-st.title("PDF Question Answering Bot")
+st.title("Chat with your PDF")
 
 uploaded_file = st.file_uploader("Upload a pdf",type="pdf")
 
@@ -20,11 +26,15 @@ if uploaded_file:
         chunks = split_text(raw_text)
         st.success(f"PDF loaded.Total chunks: {len(chunks)}")
 
+        vector_store = create_faiss_vector_store(chunks)
+
     question = st.text_input("Ask a question about this pdf: ")
 
     if question:
+        with st.spinner("Retrieving relevant context...."):
+            context = retrieve_relevant_chunks(vector_store, question)
+
         with st.spinner("Asking Groq..."):
-            context = "\n".join(chunks[:5])
             answer = ask_question_groq(context, question)
             st.success("Here's the answer: ")
             st.write(answer)
